@@ -1,0 +1,163 @@
+<?php
+$page = "VAT";
+$subpage = "Submit";
+include('settings.php');
+include('session.php');
+include('header.php');
+print "<td class=\"main\" valign=\"top\">\n";
+if ($_SESSION['user']) {
+	if ($accessRights[$page]) {
+
+		print "<p align = \"center\" class=\"heading\">VAT</p>\n";
+
+		# open database
+		$dbcnx = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		if(!$dbcnx->connect_error) {
+			
+			$id = $_REQUEST['id'];
+			
+            print "<p align = \"center\" class=\"heading\">Submit Period</p>\n";
+            print "<p align = \"center\"><b>Finalise &amp; Produce Bank CSV File</b></p>\n";
+			
+			if ($id) {
+				
+                $sql = "SELECT * FROM vat_periods WHERE ID = '$id'";
+                if ($result = $dbcnx->query($sql) AND $result->num_rows) {
+                    $row = $result->fetch_assoc();
+                    $period_start = $row['period_start'];
+                    $period_end   = $row['period_end'];
+					
+					$period_start = $period_start . "-01";
+                    $period_end   = $period_end   . "-01";
+                    $ed = date("t",strtotime($period_end));
+                    list($sy,$sm,$sd)   = explode("-",$period_start);
+					list($ey,$em,$junk) = explode("-",$period_end);
+					
+					// get sales vat
+                    $sql = "SELECT SUM(l.vattotal) AS sl_vat, SUM(l.linenet) AS sl_net
+                            FROM inv_lines AS l
+                            LEFT JOIN inv_headers AS h ON l.hid = h.ID
+                            WHERE CONCAT(h.year,\"-\",h.month) >= '$sy-$sm'
+                              AND CONCAT(h.year,\"-\",h.month) <= '$ey-$em'
+                              AND (h.txtype = 'I' OR h.txtype = 'C')
+                              AND l.unittype != 'Deposit'
+							  AND h.custref != '20199'
+                              AND h.custref != '20720'
+                    ";
+                    if ($result = $dbcnx->query($sql) AND $result->num_rows) {
+                        $row = $result->fetch_assoc();
+                        $sl_vat = $row['sl_vat'];
+                        $sl_net = $row['sl_net'];
+                    }
+
+                    // get purchases vat
+                    $sql = "SELECT SUM(vat) AS pl_vat, SUM(net) AS pl_net
+                            FROM purchases
+                            WHERE CONCAT(year,\"-\",month) >= '$sy-$sm'
+                              AND CONCAT(year,\"-\",month) <= '$ey-$em'
+                              AND (txtype = 'I' OR txtype = 'C')
+                    ";
+                    if ($result = $dbcnx->query($sql) AND $result->num_rows) {
+                        $row = $result->fetch_assoc();
+                        $pl_vat = $row['pl_vat'];
+                        $pl_net = $row['pl_net'];
+                    }
+
+					$due = $sl_vat - $pl_vat;
+					
+					$sl_vat = number_format($sl_vat,2,'.','');
+					$sl_net = number_format($sl_net,2,'.','');
+					$pl_vat = number_format($pl_vat,2,'.','');
+					$pl_net = number_format($pl_net,2,'.','');
+					$due    = number_format($due,2,'.','');
+
+                    print "<table align=\"center\" cellspacing=\"2px\" cellpadding=\"2px\">\n";
+
+					print "<tr>\n";
+					print "	<td align=\"right\"><b>Period Start</b></td>\n";
+					print "	<td>$sd-$sm-$sy</td>\n";
+					print "</tr>\n";
+					
+					print "<tr>\n";
+					print "	<td align=\"right\"><b>Period End</b></td>\n";
+					print "	<td>$ed-$em-$ey</td>\n";
+					print "</tr>\n";
+
+					print "<tr>\n";
+					print "	<td align=\"right\"><b>SL Net</b></td>\n";
+					print "	<td>$sl_net</td>\n";
+					print "</tr>\n";
+
+					print "<tr>\n";
+					print "	<td align=\"right\"><b>PL Net</b></td>\n";
+					print "	<td>$pl_net</td>\n";
+					print "</tr>\n";
+
+					print "<tr>\n";
+					print "	<td align=\"right\"><b>Due</b></td>\n";
+					print "	<td><b>$due</b></td>\n";
+					print "</tr>\n";
+
+					print "</table>\n";
+					
+                    $generate = $_REQUEST['generate'];
+                    
+                    if ($generate) {
+
+						$paid_on = date("Y-m-d");
+						$now = time();
+
+						// finalise vat period
+						$sql = "UPDATE vat_periods SET
+									sl_vat  = '$sl_vat',
+									pl_vat  = '$pl_vat',
+									sl_net  = '$sl_net',
+									pl_net  = '$pl_net',
+									paid_on = '$paid_on',
+									pid     = '0',
+									lastupd = '$now',
+									updby   = '{$_SESSION['username']}'
+								WHERE ID = '$id'
+						";
+						if ($result = $dbcnx->query($sql)) {
+							$resultMessage .= "Finalised $period_start to $period_end<br />";
+							$dbcnx->query("INSERT INTO actions_log VALUES (null,'{$_SESSION['username']}','Updated','$period_start to $period_end','$page','$now')");
+							$resultMessage .= "<br /><a href=\"vat-returns-csv.php?id=$id\" target=\"_blank\">Download Bank Csv File</a><br />";
+						} else {
+							$resultMessage .= "<span class=\"redtext\"><b>Could NOT Finalise VAT Period</b></span><br />" . $dbcnx->error . "<br />";
+						}
+					
+                    } else {
+                        print "<p align=\"center\"><b>Are You Sure?</b></p>";
+                        print "<p align=\"center\">This will finalise the period.<br />Produce a csv file to download.</p>";
+                        print "<p align=\"center\">";
+                        print "	<a href=\"vat-returns-submit.php?id=$id&amp;generate=1\">Yes Submit</a>&nbsp;|&nbsp;<a href=\"vat-returns-view.php?id=$id\">No DON'T Submit</a>";
+                        print "</p>\n";
+                    }
+
+				} else {
+					$resultMessage = "<span class=\"redtext\"><b>Period Not Found!</b></span><br />" . $dbcnx->error;
+				}
+			} else {
+                $resultMessage = "<b>Page called without id.</b>";
+            }	
+			$dbcnx->close();
+		} else {
+			$resultMessage = "<span class=\"redtext\"><b>Could Not Connect To Database!</b></span><br />" . $dbcnx->connect_error;
+		}
+		if ($resultMessage) {
+			print "<p align=\"center\">$resultMessage</p>\n";
+		}
+		print "<p align=\"center\"><a href=\"vat-returns-view.php?id=$id\">Return</a></p>\n";
+		if ($tallyResultMessage) {
+			print"<p align=\"center\">$tallyResultMessage</p>\n";
+		}
+	} else {
+		print "<p align=\"center\"><b>Access Denied</b></p>\n";
+	}
+} else {
+	include ('loggedout.php');
+}
+print "</td>\n";
+include('footer.php');
+?>

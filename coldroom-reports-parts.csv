@@ -1,0 +1,40 @@
+partGroup,partName,AFCost,DephnaCost
+Electrical,Capacitor Change,0.00,0.00
+Electrical,Controller,0.00,0.00
+Electrical,Controller change,65.00,65.00
+Electrical,Defrost breaker,65.00,65.00
+Electrical,Defrost contactor,125.00,125.00
+Electrical,Defrost element,65.00,65.00
+Electrical,Defrost sensor,65.00,65.00
+Electrical,Door element,65.00,65.00
+Electrical,Door sensor,75.00,75.00
+Electrical,Key controller,75.00,75.00
+Electrical,Light change,65.00,65.00
+Electrical,Light install,100.00,100.00
+Electrical,Low pressure switch,100.00,100.00
+Electrical,Outdoor contactor,150.00,150.00
+Electrical,PCB Board Change,125.00,125.00
+Electrical,Room sensor,0.00,0.00
+Mechanical,Door handle,65.00,65.00
+Mechanical,Door seal,0.00,0.00
+Mechanical,Drain element,65.00,65.00
+Mechanical,Drain pipe,0.00,0.00
+Mechanical,Insulation pipe,0.00,0.00
+Pluming,Suction pipe insulation,0.00,0.00
+Pluming,Outdoor drainage pipe,0.00,0.00
+Refrigeration,A/C Gas Charge,0.00,0.00
+Refrigeration,Compressor change + charge gas,450.00,450.00
+Refrigeration,Condenser motor,125.00,125.00
+Refrigeration,Decommission of evaporator,165.00,165.00
+Refrigeration,Evaporator fan change,125.00,125.00
+Refrigeration,Expansion valve,0.00,0.00
+Refrigeration,Expansion valve coil,125.00,125.00
+Refrigeration,Gas leak - Gas charge,400.00,400.00
+Refrigeration,Gas leak - Compressor componant,0.00,0.00
+Refrigeration,Gas leak - Flange at compressor,0.00,0.00
+Refrigeration,Gas leak - Joint on pipe,0.00,0.00
+Refrigeration,Gas leak - Flange on evaporator,0.00,0.00
+Refrigeration,Gas leak - Other,0.00,0.00
+Refrigeration,Installation suction pipe,65.00,65.00
+Refrigeration,Install door sensor with box,0.00,0.00
+Refrigeration,Service valve,0.00,0.00

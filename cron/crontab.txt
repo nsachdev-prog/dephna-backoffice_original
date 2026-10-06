@@ -1,0 +1,43 @@
+1 19 * * 1-5 /home/dephna/cron/cron-pplans.php #Check client payment plans
+0 21 * * * /home/dephna/cron/cron-debtors.php #Check for overdue accounts
+0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/dephna/cron/cron-xweb-collect.php 28 >/dev/null 2>&1 #Xweb Collect
+1,6,11,16,21,26,31,36,41,46,51,56 * * * * /home/dephna/cron/cron-xweb-collect.php 35 >/dev/null 2>&1 #Xweb Collect
+3,8,13,18,23,28,33,38,43,48,53,58 * * * * /home/dephna/cron/cron-xweb-collect.php 34 1 >/dev/null 2>&1 #Xweb Collect
+4,9,14,19,24,29,34,39,44,49,54,59 * * * * /home/dephna/cron/cron-xweb-collect.php 34 2 >/dev/null 2>&1 #Xweb Collect
+0,5,10,15,20,25,30,35,40,45,50,56 * * * * /home/dephna/cron/cron-xweb-collect.php 34 3 >/dev/null 2>&1 #Xweb Collect
+1,6,11,16,21,26,31,36,41,46,51,56 * * * * /home/dephna/cron/cron-xweb-collect.php 11 >/dev/null 2>&1 #Xweb Collect
+2,7,13,17,22,27,32,37,42,47,52,57 * * * * /home/dephna/cron/cron-xweb-collect.php 5 >/dev/null 2>&1 #Xweb Collect
+3,8,14,18,23,28,33,38,43,48,53,58 * * * * /home/dephna/cron/cron-xweb-collect.php 3 >/dev/null 2>&1 #Xweb Collect
+2,7,12,17,22,27,32,37,42,47,52,57 * * * * /home/dephna/cron/cron-xweb-collect.php 16 >/dev/null 2>&1 #Xweb Collect
+4,9,15,19,24,29,34,39,44,49,54,59 * * * * /home/dephna/cron/cron-xweb-collect.php 17 >/dev/null 2>&1 #Xweb Collect
+0 22 * * * /home/dephna/cron/cron-nightly.php #Nightly Clear Up
+25 18 * * * /home/dephna/cron/reports-summary.php #Report Summary
+15 0 * * * /home/dephna/cron/cron-cdr.php #Collect call data
+0 6 * * * /home/dephna/cron/weather-data-daily.php #Collect weather data
+30 0 * * * /home/dephna/cron/cron-importcalls.php #Process call data
+35 1 1 * * /home/dephna/cron/cron-period-end.php #Post period end balances
+0 5 1 * * /home/dephna/cron/cron-invoicing.php #Process monthly invoices
+0 7 5 1 * /home/dephna/cron/coldroom-reports-yearly.php #Produce yearly cold room reports
+10 0 * * * /home/dephna/cron/cron-parking.php #Email parking substitutions
+0 19 * * * /home/dephna/cron/cron-pplan-reminders.php #Email payment plan reminders
+30 7 * * * /home/dephna/cron/cron-paxton-batteries.php #Look for Battery Low status in paxton
+30 5 26 * * /home/dephna/cron/cron-utilities-readings-commit.php #Calculate monthly utilities usage per client
+35 5 26 * * /home/dephna/cron/cron-utilities-manual-commit.php #Setup records for manual reads
+0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/dephna/cron/cron-utilities-testreadings.php >/dev/null 2>&1 #Save reading for meters on test
+0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/dephna/cron/cron-utilities-testreadings-gateway.php >/dev/null 2>&1 #Save readings for Gateways on test
+0 5 * * * /home/dephna/cron/cron-utilities-readings.php 28 #Get and save meter readings
+1 5 * * * /home/dephna/cron/cron-utilities-readings.php 35 #Get and save meter readings
+2 5 * * * /home/dephna/cron/cron-utilities-readings.php 16 #Get and save meter readings
+3 5 * * * /home/dephna/cron/cron-utilities-readings.php 34 #Get and save meter readings
+4 5 * * * /home/dephna/cron/cron-utilities-readings.php 11 #Get and save meter readings
+5 5 * * * /home/dephna/cron/cron-utilities-readings.php 5 #Get and save meter readings
+6 5 * * * /home/dephna/cron/cron-utilities-readings.php 3 #Get and save meter readings
+7 5 * * * /home/dephna/cron/cron-utilities-readings.php 17 #Get and save meter readings
+31 7 * * * /home/dephna/cron/cron-paxton-report.php #Gather access report on given users
+5 6 * * 0 /home/dephna/cron/cron-weekly.php #Weekly Clear Up
+1 6 1 * * /home/dephna/cron/cron-monthly.php #Monthly Clear Up
+5 6 * * 1 /home/dephna/cron/cron-fam.php #Produce fire alarm test schedule
+0 6 * * * /home/dephna/cron/leads-summary.php #Leads report
+0 8 * * * /home/dephna/cron/coldroom-callouts-active.php #Active call outs report
+15 7 * * * /home/dephna/cron/cron-support.php #Support report
+15 * * * * /home/dephna/cron/sync-app.php #Check for app updates

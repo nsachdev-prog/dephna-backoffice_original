@@ -1,0 +1,451 @@
+<?php
+// rror_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// The field allocatedto equals
+// for txtypes I & C: the record id of the payment
+// txtype P : the payment run id
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+require "../../PHPMailer/src/SMTP.php";
+require "../../PHPMailer/src/PHPMailer.php";
+require "../../PHPMailer/src/Exception.php";
+$page = "Purchases";
+$subpage = "Payment Run";
+include('settings.php');
+include('session.php');
+include('header.php');
+$bankaccounts = array( "main" => "Barclays Bank", "cc" => "Barclaycard", "am" => "American Express", "cot" => "Capital on Tap");
+print "<td class=\"main\" valign=\"top\">\n";
+if ($_SESSION['user']) {
+	if ($accessRights[$page] > 2) {
+
+		// print heading and submenu
+		print "<p align=\"center\" class=\"heading\">PURCHASE LEDGER</p>\n";
+		include('purchases-submenu.php');
+		print "<p align=\"center\">$menustr</p>\n";
+		print "<p align=\"center\" class=\"larger\">Make Payment On Account</p>\n";
+        print "<p align=\"center\"><a href=\"purchases-paymentrun.php\">Payment Run</a></p>\n";
+
+		// open database
+		$dbcnx = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		if (!$dbcnx->connect_error) {
+
+			if ($_POST['makepayment']) {
+
+				$subject = $_POST['subject'];
+				$body    = $_POST['body'];
+                $bankacc = $_POST['bankacc'];
+				$accpay  = $_POST['accpay'];
+                $apbody  = $_POST['apbody'];
+				$erem	 = $_POST['erem'];
+				$suppid  = $_POST['suppid'];
+				$amount  = $_POST['amount'];
+                if (!$suppid) { $ersuppid = "No Supplier"; $e++; }
+				if (!is_numeric($amount)) { $eronamount = "Not Numeric"; $e++; }
+				elseif ($amount <= 0) { $eronamount = "Not Positive"; $e++; }
+				if (!$subject) { $ersubject = "No Subject"; $e++; }
+				if (!$body)    { $erbody    = "No Message"; $e++; }
+				if ($accpay == "Select") { $eraccpay = "Please Select"; $e++; }
+
+				if (!$e) {
+
+					$recType = "p";
+					if ($bankacc == "main") { $bankacc = ""; }
+					$body = nl2br($body);
+
+					$now = time();
+					$py = date("Y");
+					$pm = date("m");
+					$pd = date("d");
+
+					// get next payment run number
+					$sql = "SELECT allocatedto FROM purchases WHERE txtype='P' ORDER BY allocatedto DESC LIMIT 0, 1";
+					if ($prresult = $dbcnx->query($sql)) {
+						if ($prresult->num_rows) {
+							$prrow = $prresult->fetch_assoc();
+							$prid  = $prrow['allocatedto'];
+							$prid++;
+						} else {
+							$prid = 101;
+						}
+					}
+
+					// start bank csv
+					$bank = "";
+
+                    $sql = "SELECT * FROM suppliers WHERE ID = '$suppid'";
+                    if ($suppresult = $dbcnx->query($sql) AND $suppresult->num_rows) {
+                        $supprow = $suppresult->fetch_assoc();
+                        $suppid     = $supprow['ID'];
+                        $suppname   = $supprow['suppname'];
+                        $suppcustref= $supprow['suppcustref'];
+                        $suppref    = $supprow['suppref'];
+                        $semails    = $supprow['email'];
+                        $aemails    = $supprow['aemails'];
+                        $contname   = $supprow['contname'];
+                        $bnkAccName = $supprow['bnkAccName'];
+                        $bnkSort    = $supprow['bnkSort'];
+                        $bnkAccNum  = $supprow['bnkAccNum'];
+
+                        $bnkAccName = trim($bnkAccName);
+                        $bnkSort    = trim($bnkSort);
+                        $bnkAccNum  = trim($bnkAccNum);
+
+                        if (!$bnkSort) { $bnkSort = "000000"; $warning++; }
+                        if (!$bnkAccNum) { $bnkAccNum = "00000000"; $warning++; }
+                        if (!$bnkAccName) { $bnkAccName = $suppname; }
+
+                        if (!$semails) { $semails = $aemails; }
+                        if (!$contname) { $contname = $suppname; }
+                        if (!$suppcustref) { $suppcustref = "Dephna"; }
+
+                        if (strlen($bnkAccName)  > 18) { $bnkAccName  = substr($bnkAccName, 0, 18); }
+                        if (strlen($suppcustref) > 18) { $suppcustref = substr($suppcustref, 0, 18); }
+
+                        $resultMessage .= "<tr><td><b>$suppname</b></td><td>" . number_format($amount,2,'.','') . "</td></tr>\n";
+
+                        // start a payment record to this supplier
+                        // first get next dephna ref
+                        $sql = "SELECT dephnaref FROM purchases WHERE txtype='P' ORDER BY dephnaref DESC LIMIT 0, 1";
+                        if ($srresult = $dbcnx->query($sql)) {
+                            if ($srresult->num_rows) {
+                                $srrow = $srresult->fetch_assoc();
+                                $newdephnaref = $srrow['dephnaref'];
+                                $newdephnaref++;
+                            } else {
+                                $newdephnaref = 101;
+                            }
+                        }
+
+                        $negtotalPaid = $amount; if ($negtotalPaid > 0) { $negtotalPaid *= -1; }
+
+                        // add payment to database (We'll update net, vat & total later)
+                        $sql = "INSERT INTO purchases VALUES (
+                            null,
+                            'p',
+                            '$suppid',
+                            '$newdephnaref',
+                            '$bankacc',
+                            '',
+                            '$py',
+                            '$pm',
+                            '$pd',
+                            '',
+                            '$negtotalPaid',
+                            '0',
+                            '$negtotalPaid',
+                            '$negtotalPaid',
+                            '0',
+                            '',
+                            '',
+                            '0',
+                            '0',
+                            '0',
+                            '$now',
+                            '$prid',
+                            '$now',
+                            '{$_SESSION['username']}'
+                        )";
+                        $payresult = $dbcnx->query($sql);
+                        $paymentid = $dbcnx->insert_id;
+
+                        $remittance = "Payment on account of ".number_format($amount,2,'.','');
+
+                        // add to bank csv
+                        $bank .= "$bnkSort,$bnkAccName,$bnkAccNum,".number_format($amount,2,'.','').",$suppcustref,99\r\n";
+
+                        // replace fields in this email body
+                        $search   = array("[[SupplierContactName]]","[[CustomerRef]]","[[TransactionList]]");
+                        $replace  = array($contname,$suppcustref,$remittance);
+                        $thisbody = str_replace($search,$replace,$body);
+
+                        // email supplier
+                        if ($erem == "on") {
+                            if ($semails) {
+                                $from = "accounts@dephna.com";
+                                $fromname = "Dephna Group";
+
+                                $emails = explode(",",$semails);
+                                
+                                $message  = file_get_contents('email-header.html') . "\r\n";
+                                $message .= $thisbody;
+                                $message .= file_get_contents('email-footer.html') . "\r\n";
+
+                                $mail = new PHPMailer(true);
+
+                                try {
+                                    include('../../cron/SMTP.php');
+                                    $mail->setFrom($from, $fromname);
+                                    $mail->addReplyTo($from, $fromname);
+                                    $mail->addBCC('accounts@dephna.com', 'Dephna Accounts');
+                                    foreach ($emails AS $to) {
+                                        $mail->addAddress($to);
+                                    }
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $subject;
+                                    $mail->Body    = $message;
+                                    $mail->send();
+                                    
+                                    $resultMessage .= "<tr>";
+                                    $resultMessage .= "<td colspan=\"2\">Email Sent to $semails</td>";
+                                    $resultMessage .= "</tr>\n";
+                                    
+                                } catch (Exception $e) {
+                                        $resultMessage .= "<tr>";
+                                        $resultMessage .= "<td colspan=\"2\">COULD NOT Send Email<br>" . $mail->ErrorInfo . "</td>";
+                                        $resultMessage .= "</tr>\n";
+                                }
+
+                            } else {
+                                $resultMessage .= "<tr>";
+                                $resultMessage .= "<td colspan=\"2\">No Supplier Email Address</td>";
+                                $resultMessage .= "</tr>\n";
+                            }
+
+                        } else {
+                            $resultMessage .= "<tr>";
+                            $resultMessage .= "<td colspan=\"2\">Email Remittance set to No</td>";
+                            $resultMessage .= "</tr>\n";
+                        }
+
+                        // add line break
+                        $resultMessage .= "<tr>";
+                        $resultMessage .= "<td colspan=\"2\">&nbsp;</td>";
+                        $resultMessage .= "</tr>\n";
+
+                    } else {
+                        $resultMessage .= "<tr>";
+                        $resultMessage .= "<td colspan=\"2\"><b>Could not get supplier</b><br>" . $dbcnx->error . "</td>";
+                        $resultMessage .= "</tr>\n";
+                        // add line break
+                        $resultMessage .= "<tr>";
+                        $resultMessage .= "<td colspan=\"2\">&nbsp;</td>";
+                        $resultMessage .= "</tr>\n";
+                    }
+
+					if ($amount > 0) {
+
+						// save bank csv file
+						$csv_dir = "../../dis2_db/csv";
+						$filedt  = date("Y-m-d-H-i-s");
+						$userid  = sprintf("%03s",$_SESSION['user']);
+
+						if ($accpay == "Yes") {
+							$bankfn  = "PB-$filedt-$prid-$userid.csv";
+						} else {
+							$bankfn  = "PN-$filedt-$prid-$userid.csv";
+						}
+
+						$handle  = fopen("$csv_dir/$bankfn", "w");
+						fwrite($handle, $bank);
+						fclose($handle);
+
+						if (!$bankacc) { $bankacc = "main"; }
+
+						// email accounts payable
+						$from     = "no-reply@dephna.com";
+						$fromname = "Dephna Robot";
+						$to       = "accounts@dephna.com";
+						$subject  = "PAYRUN-$prid";
+						$apbody .= "<br><b>Purchase Ledger Payments</b>";
+						$apbody .= "<br>PAYRUN-$prid";
+						$apbody .= "<br>Bank: $bankaccounts[$bankacc]";
+						$apbody .= "<br>Entered By: {$_SESSION['username']}<br>";
+						$apbody .= "<br>Payment List:<br>\r\n";
+						$apbody .= "<table border=\"0\" cellspacing=\"2\" cellpadding=\"2\">\n";
+						$apbody .= $resultMessage . "</table>\n";
+
+						$message  = file_get_contents('email-header.html') . "\r\n";
+						$message .= $apbody;
+						$message .= file_get_contents('email-footer.html') . "\r\n";
+
+						$mail = new PHPMailer(true);
+						try {
+							include('../../cron/SMTP.php');
+							$mail->setFrom($from, $fromname);
+							$mail->addAddress($accountsPayable);
+							$mail->addCC('rajive@dephna.com', 'Rajive Sachdev');
+							// $mail->addCC('accounts@dephna.com', 'Dephna Accounts');
+							$mail->isHTML(true);
+							$mail->Subject = $subject;
+							$mail->Body    = $message;
+							$mail->send();
+							$resultMessage .= "<tr><td colspan=\"2\">Email Sent to Accounts Payable</td></tr>\n";
+						} catch (Exception $e) {
+							$resultMessage .= "<tr><td colspan=\"2\">COULD NOT Send Email<br>" . $mail->ErrorInfo . "</td></tr>\n";
+						}
+
+						// add bank download links
+						$resultMessage .= "<tr><td colspan=\"2\"><a href=\"$csv_dir/$bankfn\">Download Bank CSV</a></td></tr>\n";
+
+						// log it
+						$dbcnx->query("INSERT INTO actions_log VALUES (null,'{$_SESSION['username']}','Created','Payment Run $prid Total: $GrandtotalPaid','$page','$now')");
+
+					} else {
+						$resultMessage .= "<tr><td colspan=\"2\"><b>Nothing to pay!</b></td></tr>\n";
+					}
+					$resultMessage = "<table align=\"center\">" . $resultMessage . "</table>\n";
+				}
+			} else {
+				$accpay = "Yes";
+				$erem = "on";
+			}
+
+			if (!$resultMessage OR $e) {
+
+				// get email template
+				$sql = "SELECT * FROM mailouts WHERE mref='PurchPayment'";
+				$tresult = $dbcnx->query($sql);
+				if ($tresult->num_rows) {
+					$trow = $tresult->fetch_assoc();
+					$subject = $trow['subject'];
+                    $body    = $trow['html'];
+
+					if (!$apbody) {
+                        $valuedate = date('d-m-Y', strtotime ('4 weekdays'));
+                        $apbody = "Three day payment please";
+                    }
+
+					print "<form name=\"emailform\" method=\"post\" action=\"purchases-payonaccount.php\">\n";
+					print "<input type=\"hidden\" name=\"makepayment\" value=\"1\" />\n";
+					print "<table align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">\n";
+                    // on account payment
+                    // get suppid and suppname from suppliers where bank = Yes
+                    $sql = "SELECT ID, suppname, bnkSort, bnkAccNum FROM suppliers WHERE bank = 'Yes' ORDER BY suppname";
+                    $txresult = $dbcnx->query($sql);
+                    if ($txresult->num_rows) {
+                        print "<tr>\n";
+                        print "	<td colspan=\"3\"><b>Supplier</b> (Showing suppliers with bank details)</td>\n";
+                        print "	<td align=\"right\"><b>Amount</b></td>\n";
+                        print "	<td>&nbsp;</td>\n";
+                        print "</tr>\n";
+                        print "<tr>\n";
+                        print "	<td colspan=\"2\"><select name=\"suppid\" id=\"suppid\" class=\"element\">\n";
+                        print "		<option></option>\n";
+                        while ($txrow = $txresult->fetch_assoc()) {
+                            $thissuppid = $txrow['ID'];
+                            $suppname   = $txrow['suppname'];
+                            $thisbnkSort= $txrow['bnkSort'];
+                            $thisbnkAccNum = $txrow['bnkAccNum'];
+                            print "		<option value=\"$thissuppid\" suppname=\"$suppname\" bnkSort=\"$thisbnkSort\" bnkAccNum=\"$thisbnkAccNum\"";
+                            if ($thissuppid == $suppid) { print " SELECTED"; }
+                            print ">$suppname</option>\n";
+                        }
+                        print "	</select>";
+                        if ($ersuppid) { print "<br><span class=\"redtext\">$ersuppid</span>"; }
+                        print "</td>\n";
+                        print "	<td align=\"right\">&nbsp;</td>\n";
+                        print "	<td><input name=\"amount\" id=\"amount\" type=\"text\" class=\"element_small\""; if ($amount) { print " value=\"$amount\""; } print " />";
+                        if ($eronamount) { print "<br><span class=\"redtext\">$eronamount</span>"; }
+                        print "</td>\n";
+                        print "	<td><a href=\"#\">update</a></td>\n";
+                        print "</tr>\n";
+                        print "<tr>\n";
+                        print "	<td colspan=\"3\" id=\"dspdetails\">Supplier Not Selected</td>\n";
+                        print " <td align=\"right\" id=\"dispAmount\">Pay: 0.00</td>\n";
+                        print "</tr>\n";
+                    } else {
+                        print "<tr>\n";
+                        print "	<td><b>On Account</b> There are NO Suppliers with bank details</td>\n";
+                        print "</tr>\n";
+                    }
+                    print "</table>\n";
+
+                    // jquery to display dspsuppname, dspbnkSort, dspbnkAccNum,  dispAmount based on suppid selected and amount entered
+                    print "<script>\n";
+                    print "$(document).ready(function() {\n";
+                    print "    $(\"#suppid\").change(function() {\n";
+                    print "        var suppname = $(\"#suppid option:selected\").attr(\"suppname\");\n";
+                    print "        var bnkSort = $(\"#suppid option:selected\").attr(\"bnkSort\");\n";
+                    print "        var bnkAccNum = $(\"#suppid option:selected\").attr(\"bnkAccNum\");\n";
+                    print "        $(\"#dspdetails\").html(suppname+'&nbsp;&nbsp;Sort: '+bnkSort+'&nbsp;&nbsp;Acc: '+bnkAccNum);\n";
+                    print "    });\n";
+                    print "    $(\"#amount\").change(function() {\n";
+                    // get and display amount to 2 decimal places and thousand separator
+                    print "        var amount = $(\"#amount\").val();\n";
+                    print "        amount = parseFloat(amount).toFixed(2).replace(/\\d(?=(\\d{3})+\\.)/g, '$&,');\n";
+                    print "        $(\"#dispAmount\").html('Pay: '+amount);\n";
+                    print "    });\n";
+                    print "});\n";
+                    print "</script>\n";
+	
+                    print "<table align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">\n";
+
+                    // email erem checkbox
+                    print "<tr>\n";
+                    print "	<td align=\"right\"><b>Email Supplier:</b></td>\n";
+                    print "	<td><input type=\"checkbox\" name=\"erem\""; if ($erem == "on") { print " CHECKED"; } print " /></td>\n";
+                    print "</tr>\n";
+
+                    print "<tr>\n";
+                    print "	<td align=\"right\"><b>Subject:</b></td>\n";
+                    print "	<td><input name=\"subject\" type=\"text\" class=\"element\" maxlength=\"100\" value=\"$subject\" />\n";
+                    if ($ersubject) { print "&nbsp;<span class=\"redtext\">$ersubject</span>"; }
+                    print "	</td>\n";
+                    print "</tr>\n";
+
+                    print "<tr>\n";
+                    print "	<td align=\"right\" valign=\"top\"><b>Message:</b></td>\n";
+                    print " <td><textarea name=\"body\" rows=\"16\" class=\"element_box_large\">$body</textarea>";
+                    if ($erbody) { print "<br><span class=\"redtext\">$erbody</span>"; }
+                    print "<td>\n";	
+                    print "</tr>\n";
+
+                    print "<tr>\n";
+                    print "	<td>&nbsp;</td>\n";
+                    print "</tr>\n";
+
+                    print "<tr>\n";
+                    print "	<td align=\"right\"><b>Allocate To:</b></td>\n";
+                    print "	<td><select name=\"bankacc\" class=\"element\">";
+                    foreach ($bankaccounts AS $key => $value) {
+                        print "		<option "; if ($bankacc == $key) { print "SELECTED "; } print "value=\"$key\">$value</option>";
+                    }
+                    print "	</select>";
+                    print "	</td>\n";
+                    print "</tr>\n";
+	
+                    print "<tr>\n";
+                    print "	<td align=\"right\"><b>Email Accounts Payable:</b></td>\n";
+                    print "	<td><select name=\"accpay\" class=\"element\">\n";
+                    print "		<option>Select</option>\n";
+                    print "		<option "; if ($accpay == "Yes") { print "SELECTED "; } print "value=\"Yes\">Yes, Process Payment</option>";
+                    print "		<option "; if ($accpay == "No")  { print "SELECTED "; } print "value=\"No\">No, Manual Payment</option>";
+                    print "	</select>";
+                    if ($eraccpay) { print "<br><span class=\"redtext\">$eraccpay</span>"; }
+                    print "	</td>\n";
+                    print "</tr>\n";
+
+                    print "<tr>\n";
+                    print "	<td align=\"right\" valign=\"top\"><b>Payable Instructions:</b></td>\n";
+                    print " <td><textarea name=\"apbody\" rows=\"4\" class=\"element_box_large\">$apbody</textarea>";
+                    if ($erapbody) { print "<br><span class=\"redtext\">$erapbody</span>"; }
+                    print "<td>\n";	
+                    print "</tr>\n";	
+                    
+                    print "</table>\n";
+
+                    print "<p align=\"center\"><input name=\"Submit\" type=\"submit\" class=\"button\" value=\"Make Payment\" /></p>\n";
+                    print "</form>\n";
+                } else {
+                    print "<p align=\"center\" class=\"redtext\"><b>Could not get email template</b></p>";
+				}
+			}
+
+			$dbcnx->close();
+		} else {
+			$resultMessage = "<p align=\"center\" class=\"redtext\"><b>Could not connect to database!</b></p>" . $dbcnx->connect_error;
+		}
+	} else {
+		$resultMessage = "<p align=\"center\" class=\"redtext\"><b>Access Denied</b></p>";
+	}
+	if ($resultMessage) {
+		print $resultMessage;
+	}
+} else {
+	include ('loggedout.php');
+}
+print "</td>\n";
+include('footer.php');
+?>

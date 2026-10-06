@@ -1,0 +1,467 @@
+
+/* CSS Document */
+
+body {
+	background-color:#fff;
+	margin: 0;
+	font-family:"Times New Roman", Times, serif;
+	font-size: 12pt;
+	color: #000;
+    }
+	
+a { text-decoration: none; letter-spacing:.2px;
+}
+a:link {	color: #66CCFF;
+}
+a:visited {	color: #66CCFF;
+}
+a:hover {	color: #333333;
+}
+a:active {	color: #66CCFF;
+}
+
+/* LAYOUT */
+	
+#wrapper-print{
+	width:720px;
+	margin-top:10px;
+	}
+	
+/* DD form */
+
+#container-dd {
+	position:relative;
+	left:5px;
+	top:5px;
+	width:717px;
+	height:618px;
+	text-align:left;
+	border:solid 1px #000;
+	border-bottom:none !important;
+	}
+
+#midBlock-dd{
+	float:left;
+	width:660px;
+	margin:10px 20px 0px 20px;
+	}
+	
+#header-left-dd{
+	float:left;
+	width:340px;
+	text-align:center;
+	margin-bottom:10px;
+}
+
+#header-right-dd{
+	float:left;
+	width:200px;
+	text-align:left;
+	font-size:17px !important;
+	line-height:18px;
+}
+
+#header-right-dd img{
+	padding:0px 0px  10px 120px;
+}
+
+#left-block-dd{
+	float:left;
+	width:320px;
+	font-size:12px !important;
+}
+
+#right-block-dd{
+	float:left;
+	width:340px;
+	font-size:12px !important;
+	margin:40px 0px 0px 0px;
+}
+
+
+#dephna-address-dd{
+	width:285px;
+	height:83px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:2px solid #000;
+	border-bottom:2px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+}
+
+#account-holder-name1-dd{
+	width:285px;
+	height:25px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:2px solid #000;
+	border-bottom:none;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+}
+
+#account-holder-name1a-dd{
+	width:285px;
+	height:25px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:2px solid #000;
+	border-bottom:none;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+	background-image:url(images/TotheManager-bg.gif);
+	background-repeat:no-repeat;
+}
+
+
+#account-holder-name2-dd{
+	width:285px;
+	height:25px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:2px solid #000;
+	border-bottom:2px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+}
+
+#right-block-dd #account-holder-name1-dd{
+	height:60px !important;
+}
+
+#account-number-dd{
+	width:285px;
+	height:25px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	border-bottom:2px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+}
+
+#sort-code-dd{
+	width:200px;
+	height:25px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	border-bottom:2px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:14px !important;
+}
+
+#right-block-dd #account-number-dd{
+	width:340px !important;
+}
+
+#account-number-dd td, #sort-code-dd td{
+	border-right:1px solid #000;
+	height:25px;
+	padding-left:6px;
+}
+
+#bottom-text-dd{
+	float:center;
+	text-align:center;
+	margin-top:-20px;
+	margin-bottom:10px;
+	font-size:11px !important;
+}
+
+#footerBlock-dd{
+	float:left;
+	width:717px;
+	margin-top:-15px;
+	margin-left:4px;
+	text-align:left;
+	font-size:10px;
+	line-height:14px;
+	}
+	
+.dd-form-inner{
+	padding:6px;
+}
+	
+.dd-form-inner-small{
+	padding:2px;
+}
+	
+#account-holder-name1a-dd .dd-form-inner-small{
+	padding:2px 0px 0px 70px;
+}
+
+.title-text-dd{
+	margin:10px 0px -12px 0px;
+}
+	
+/* Contract styles */
+
+#container-con {
+	position:relative;
+	left:5px;
+	top:5px;
+	width:717px;
+	height:860px;
+	text-align:left;
+	border:solid 1px #000;
+	}
+	
+#logo-con{
+	position:relative;
+	left:5px;
+	top:5px;
+	width:717px;
+	text-align:center;
+	margin-bottom:20px;
+}
+
+#topBlock-con{
+	float:left;
+	width:717px;
+	height:90px;
+	background-color:#ccc;
+	border-bottom:solid 1px #000;
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	}
+
+.midBlock-con{
+	float:left;
+	width:717px;
+	padding:6px 0 10px 0;
+	border-bottom:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	}
+
+.midBlock-sigs{
+	float:left;
+	width:717px;
+	padding:6px 0 10px 0;
+	}
+
+#bottom-text-con{
+	float:center;
+	text-align:center;
+	margin-top:-20px;
+	margin-bottom:10px;
+	font-size:11px !important;
+}
+
+#footerBlock-con{
+	float:left;
+	width:717px;
+	margin-top:-15px;
+	margin-left:4px;
+	text-align:left;
+	font-size:10px;
+	line-height:14px;
+	}
+	
+.con-form-inner{
+	padding:2px;
+}
+
+.title-text-con{
+	margin:10px 0px -12px 0px;
+}
+
+.title-con{
+	font-size:15px;
+	font-weight:bold;
+	font-family:Arial, Helvetica, sans-serif !important;
+}
+
+.form-field-con1{
+	width:115px;
+	height:19px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#FFF;
+	margin:0 2px 0 5px;
+}
+
+.form-field-con-end{
+	border-bottom:1px solid #000;
+}
+
+.form-field-con-start{
+	margin:0 0 0 5px !important;
+	border-left:1px solid #000;
+}
+
+
+.form-field-con2{
+	width:235px;
+	height:19px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#FFF;
+	margin:0 2px 0 5px;
+}
+
+.form-field-con3{
+	width:120px;
+	height:19px;
+	border-top:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#FFF;
+}
+
+.form-field-con4{
+	width:320px;
+	height:55px;
+	border:1px solid #000;
+	background:#FFF;
+	margin-bottom:13px;
+}
+
+.con-info{
+	float:center;
+	width:697px;
+	margin:5px 10px;
+	text-align:center;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:11px !important;
+}
+
+/* Virtual */
+
+
+.form-field-virt{
+	width:130px;
+	height:19px;
+	border-top:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#fff;
+}
+
+
+.form-field-virt-grey{
+	width:130px;
+	height:19px;
+	border-top:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#ccc;
+}
+
+
+/* Storage */
+
+#container-con-stor {
+	position:relative;
+	left:5px;
+	top:5px;
+	width:717px;
+	height:860px;
+	text-align:left;
+	border:solid 1px #000;
+	}
+
+#container-con-stor .form-field-con4{
+	width:320px;
+	height:35px;
+	border:1px solid #000;
+	background:#FFF;
+	margin-bottom:7px;
+}
+
+.authPersons-stor{
+	float:left;
+	width:500px;
+	height:19px;
+	border:1px solid #000;
+	background:#FFF;
+	margin-bottom:6px;
+}
+
+
+.form-field-stor1{
+	width:260px;
+	height:19px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#FFF;
+	margin:0 2px 0 5px;
+}
+
+
+
+.form-field-stor2{
+	width:110px;
+	height:19px;
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:12px !important;
+	background:#FFF;
+	margin:0 2px 0 5px;
+}
+
+.stor-info1{
+	float:center;
+	width:697px;
+	margin:3px 10px 0px 10px;
+	text-align:center;
+	font-family:Arial, Helvetica, sans-serif !important;
+	font-size:9px !important;
+}
+
+	
+
+/* Stuff */
+
+.small-print{
+	margin-top:30px;
+	margin-bottom:30px;
+	font-size:10px;
+}
+
+.smaller-print{
+	margin-top:10px;
+	margin-bottom:10px;
+	font-size:8px;
+}
+
+.small-print2{
+	margin-top:30px;
+	margin-bottom:30px;
+	font-size:10px;
+	font-family:Arial, Helvetica, sans-serif !important;
+}
+
+.small-print3{
+	font-size:7px;
+	line-height:7px;
+	font-family:Arial, Helvetica, sans-serif !important;
+}
+
+.mini-font{
+	font-size:9px;
+	padding-left:2px;
+}
+
+#manager-bg{
+	background-image:url(images/TotheManager-bg.gif);
+	background-repeat:no-repeat;
+	background-color:#F00;
+}
+	

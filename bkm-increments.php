@@ -1,0 +1,35 @@
+		print "<tr>\n";
+		print "	<td valign=\"top\" align=\"right\"><b>Deposit</b></td>\n";
+		print "	<td>Enter the total value for the deposit. If it is to be<br />staggered over several months, please click<br />'Show/Hide' and fill in the increments you require.</td>\n";
+		print "</tr>\n";
+		print "<tr>\n";
+		print "  <td valign=\"middle\" align=\"right\">Total:</td>\n";
+		print "  <td><input name=\"bkdep\" type=\"text\" class=\"element\" size=\"40\" maxlength=\"10\" value=\"\" /></td>\n";
+		print "</tr>\n";
+		print "<tr>\n";
+		print "	<td align=\"right\" valign=\"top\">Increments:</td>\n";
+		print "	<td>\n";
+		print "		<script type=\"text/javascript\">\n";
+		print "		$(document).ready(function(){\n";
+		print "			$(\".slidingDiv\").hide();\n";
+		print "			$(\".show_hide\").show();\n";
+		print "			$('.show_hide').click(function(){\n";
+		print "			$(\".slidingDiv\").slideToggle();\n";
+		print "			});\n";
+		print "		});\n";
+		print "		</script>\n";
+		print "		<a href=\"#\" class=\"show_hide\">Show/Hide</a>\n";
+		print "		<div class=\"slidingDiv\">\n";
+		print "		<table width=\"100%\" cellspacing=\"4\" cellpadding=\"0\">\n";
+		$increments = explode("|",$increments);
+		foreach ($increments AS $key => $value) {
+			list($year,$month,$amount) = explode("-",$value);
+			print "		  <tr>\n";
+			print "			<td width=\"22%\" align=\"right\"><b>$month $year</strong></b>\n";
+			print "			<td width=\"29%\"><input type=\"text\" name=\"increments[]\" class=\"element_tiny\" /></td>\n";
+			print "		  </tr>\n";
+		}
+		print "		  </table>\n";
+		print "		</div>\n";
+		print "	</td>\n";
+		print "</tr>\n";

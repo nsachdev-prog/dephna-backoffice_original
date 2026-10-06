@@ -1,0 +1,139 @@
+body{
+    background-color:#fff;
+    font-family:helvetica,arial,verdana,sans-serif;
+    font-size:14px;
+}
+.hd1 {
+    width:50%;
+    text-align: left;
+    color: #eee;
+    vertical-align: text-top;
+}
+.hd2 {
+    width:50%;
+    text-align: right;
+    color: #eee;
+    vertical-align: text-top;
+}
+a:link { color: #ccc; }
+a:visited { color: #ccc; }
+a:hover { color: #fff; }
+a:active { color: #ccc; }
+p {
+    text-align: center;
+}
+.redtext {
+    font-size: 12px;
+    color: red
+}
+.button {
+    width:100px;    
+    height:30px;
+    background-color:#35729f;
+    color:#fff;
+    border:0px;
+    border-radius: 4px;
+    font-family:helvetica,arial,verdana,sans-serif;
+    font-size:14px;
+}
+.ddg {
+    width:80%;
+    text-align: left;
+    font-size: 11px;
+    border: 2px solid #333;
+}
+ul {
+    padding-left: 20px;
+    margin: 0px;
+}
+li {
+    margin-bottom: 6px;
+}
+
+@media only screen and (max-width: 800px){
+    body{
+        font-size:12px;
+    }
+    .tblwidth{
+        width:100%;
+        border: 0px;
+    }
+    .larger {
+        font-size:14px;
+        font-weight:bold;
+        color:#0c4173;
+        padding: 6px;
+    }
+    .element {
+        width: 180px;
+        border: 1px solid #999;
+        padding: 4px;
+        background-color:#fff;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+    .input-class {
+        width: 28px;
+        border: 1px solid #999;
+        padding: 4px;
+        background-color:#fff;
+        text-align: center;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+    .col1 {
+        text-align:right;
+        padding-right:10px;
+        vertical-align: text-top;
+    }
+    .col2 {
+        text-align:left;
+        padding-left:10px;
+        vertical-align: text-top;
+    }
+}
+@media only screen and (min-width: 800px){
+    .tblwidth{
+        width: 800px;
+        text-align: center;
+    }
+    .larger {
+        font-size:16px;
+        font-weight:bold;
+        color:#0c4173;
+        padding: 6px;
+    }
+    .element {
+        width: 250px;
+        border: 1px solid #999;
+        padding: 4px;
+        background-color:#fff;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .input-class {
+        width: 30px;
+        border: 1px solid #999;
+        padding: 4px;
+        background-color:#fff;
+        text-align: center;
+        font-family:helvetica,arial,verdana,sans-serif;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .col1 {
+        width:150px;
+        text-align:right;
+        padding-right:10px;
+        vertical-align: text-top;
+    }
+    .col2 {
+        width:250px;
+        text-align:left;
+        padding-left:10px;
+        vertical-align: text-top;
+    }
+}

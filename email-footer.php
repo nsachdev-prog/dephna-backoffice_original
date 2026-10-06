@@ -1,0 +1,9 @@
+
+<?php
+	$message .= "</td></tr>";
+	$message .= "<tr><td style=\"background-color:#53d0b0;padding:30px 10px;\"><p style=\"font-family: Verdana, Arial,sans-serif;text-align:center;color:#fff;font-size:20px;\">Call us on <span style=\"color:#011a44;\">020 8896 7575</span> for more information</p></td></tr>";
+	$message .= "<tr><td style=\"background-color:#011a44;padding:30px 10px 0;\"><p style=\"font-family: Verdana, Arial,sans-serif;text-align:center;color:#fff;font-size:16px;\">DEPHNA GROUP LTD<br>Dephna House<br>2 Portal Way<br>London, W3 6RT</p><p align=\"center\"><a style=\"text-align:center;color:#fff;font-size:16px;padding:5px;font-family: Verdana, Arial,sans-serif;text-decoration:none;\" href=\"https://www.dephna.com\">www.dephna.com</a></p></td></tr>";
+	$message .= "<tr><td style=\"background-color:#011a44;padding-top:30px;padding-left:10px;padding-right:10px;padding-bottom:30px;\"><p style=\"font-family: Verdana, Arial,sans-serif;text-align:center;color:#fff;font-size:12px;\">Internet communications are not secure and therefore we cannot accept legal responsibility for the contents of this message. \r\nThe information transmitted is intended only for the person or entity to whom it is addressed and may contain confidential and/or privileged material. Any review, retransmission, dissemination or other use of, or taking of any action in reliance upon, this information by persons or entities other than the intended recipient is prohibited. If you received this in error, please contact the sender and delete the material from any computer.</p></td></tr>";
+	$message .= "</table>";
+	$message .= "\r\n\r\n";
+?>

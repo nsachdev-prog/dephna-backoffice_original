@@ -1,0 +1,46 @@
+{
+  "name": "jquery-formhelper",
+  "version": "1.8.2",
+  "description": "jQuery form helper",
+  "keywords": [
+    "jquery",
+    "ajax",
+    "jquery-plugin",
+    "jquery-formhelper",
+    "form"
+  ],
+  "main": "src/js/jquery-formhelper.js",
+  "devDependencies": {
+    "@babel/core": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "@types/jquery": "^3.5.5",
+    "@types/mime-types": "^2.1.0",
+    "babelify": "^10.0.0",
+    "drag-drop": "^7.0.1",
+    "grunt": "^1.4.0",
+    "grunt-browserify": "^6.0.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-cssmin": "^4.0.0",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-terser": "^2.0.0",
+    "ini": "^2.0.0",
+    "mime-types": "^2.1.30"
+  },
+  "scripts": {
+    "serve": "http-server -d false -c-1 -o demo",
+    "build": "grunt release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gunter1020/jquery-formHelper.git"
+  },
+  "author": {
+    "name": "Gunter.Chou",
+    "email": "abcd2221925@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gunter1020/jquery-formHelper/issues"
+  },
+  "homepage": "https://github.com/gunter1020/jquery-formHelper#readme"
+}

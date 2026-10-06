@@ -1,0 +1,21 @@
+SYS,RAC,Risk Assessemnt Completed,N/A
+SYS,JCD,Job Completed,N/A
+SYS,PRD,Parts Required,No
+CMP,BLT,Belts,N/A
+CMP,COL,Compressor Oil Level,N/A
+CMP,FLT,Filters,N/A
+CMP,BGS,Bearings,N/A
+CMP,EVO,Expansion Valve Operation,N/A
+CMP,SSO,Safety Switch Operation,N/A
+CMP,FSC,Fan Speed Control,N/A
+CMP,PPO,Pump Operation,N/A
+CMP,FNA,Fan Assemblies,N/A
+CMP,DNC,Drains Clear,N/A
+CMP,ELC,Electrical Connections,N/A
+CMP,PPC,Pipework Conditions,N/A
+CMP,CNT,Controls,N/A
+CMP,PRA,Pressure Acceptable,N/A
+CMP,OPC,Operating Correctly,N/A
+CMP,SLC,System Leak Checked,N/A
+CMP,DAM,Any damage found on system,N/A
+CMP,OTH,Other,N/A

@@ -1,0 +1,27 @@
+commodity,details,pos
+Electricity,Type of equipment,1
+Electricity,KW of equipment,2
+Electricity,Requires water,3
+Electricity,Requires drainage,4
+Electricity,Undertake survey to assess cpapcity,5
+Electricity,Is there a canopy required,7
+Electricity,If yes - what size canopy and is there space under the canopy,8
+Electricity,If no - what size required,9
+Electricity,If capacity  - quote,10
+Gas,Type of equipment,1
+Gas,KW of equipment,2
+Gas,Requires water,3
+Gas,Requires drainage,4
+Gas,Undertake survey to assess cpapcity,5
+Gas,Is there a canopy required,6
+Gas,If yes - what size canopy and is there space under the canopy,7
+Gas,If no - what size required,8
+Gas,Is there an interlock system required,9
+Gas,If no quote required to install,10
+Water,Type of equipment: dishwaher&#44; handwash&#44; single sink&#44; double sink,1
+Water,15mm hot and cold water and 42mm drain,2
+Water,Undertake survey to assess cpapcity and location,3
+Water,Is the water meter installed,4
+Water,Is there a canopy required,5
+Water,If yes - what size canopy and is there space under the canopy,6
+Water,If no quote required to install,7
